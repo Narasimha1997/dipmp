@@ -1,2 +1,2 @@
 # dipmp
-A decentralized package manager for python built on top of IPFS and Ethereum - using python, solidity and pinata.
+ A decentralized package registry for python built on top of IPFS and Ethereum - using python, solidity and pinata. dipmp can be used with pip. 
