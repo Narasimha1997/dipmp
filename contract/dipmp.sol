@@ -8,7 +8,7 @@ contract DIPMP {
         string IPFSHash;
         string idata;
         address by;
-        uint32 version;
+        uint24 version;
     }
 
     // maps (package => (version => identity))
@@ -21,7 +21,7 @@ contract DIPMP {
     constructor() {}
 
     // check if the package with given name and version exists
-    function checkExists(string memory name, uint32 version) external view returns(bool) {
+    function checkExists(string memory name, uint24 version) external view returns(bool) {
         uint8 count = version_counts[name];
         for (uint8 i = 0; i < count; i++) {
             if (packages[name][i].version == version) {
@@ -33,7 +33,7 @@ contract DIPMP {
     }
 
     // creates a new mapping
-    function createIdentity(string memory name, uint32 version, string memory IPFSHash, string memory idata) external returns(bool) {
+    function createIdentity(string memory name, uint24 version, string memory IPFSHash, string memory idata) external returns(bool) {
         require(!this.checkExists(name, version), "package with given name and version exists");
 
         // create a new package entry

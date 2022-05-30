@@ -106,6 +106,14 @@ ABI = [{
 
 GETTER = "getIdentity"
 
+# unpack 24-bit semantic version representation to string
+def decode_version(version):
+    c1 = version & 0xff0000
+    c2 = version & 0x00ff00
+    c3 = version & 0x0000ff
+
+    return  "{:02d}.{:02d}.{:02d}".format(c1, c2, c3)
+
 # get the contract instance from gateway and address
 def get_contract_instance(gateway: str, address: str):
     connection = w.Web3(w.Web3.HTTPProvider(gateway))
