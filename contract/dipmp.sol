@@ -5,38 +5,64 @@ contract DIPMP {
 
     // represents a stored package
     struct PackageIdentity {
-        bool _entry;
         string IPFSHash;
         string idata;
+        address by;
+        uint32 version;
     }
 
     // maps (package => (version => identity))
-    mapping(string => mapping(string => PackageIdentity)) packages;
+    mapping(string => mapping(uint8 => PackageIdentity)) packages;
+
+    // stores mapping counts (allow only 256 versions to be present)
+    mapping(string => uint8) version_counts;
 
     // we don't have to do anything while deployment
     constructor() {}
 
-    // creates a new mapping
-    function createIdentity(string memory name, string memory version, string memory IPFSHash, string memory idata) external returns(bool) {
-        require(!packages[name][version]._entry, "package with given (name, version) already exists");
-        PackageIdentity memory identity;
-        identity.idata = idata;
-        identity.IPFSHash = IPFSHash;
-        identity._entry = true;
+    // check if the package with given name and version exists
+    function checkExists(string memory name, uint32 version) external view returns(bool) {
+        uint8 count = version_counts[name];
+        for (uint8 i = 0; i < count; i++) {
+            if (packages[name][i].version == version) {
+                return true;
+            }
+        }
 
-        packages[name][version] = identity;
+        return false;
+    }
+
+    // creates a new mapping
+    function createIdentity(string memory name, uint32 version, string memory IPFSHash, string memory idata) external returns(bool) {
+        require(!this.checkExists(name, version), "package with given name and version exists");
+
+        // create a new package entry
+        PackageIdentity memory identity;
+        identity.by = msg.sender;
+        identity.IPFSHash = IPFSHash;
+        identity.idata = idata;
+        identity.version = version;
+
+        uint8 current_counter = version_counts[name];
+        packages[name][current_counter] = identity;
+        version_counts[name]++;
 
         return true;
     }
 
     // get the identity details
-    function getIdentity(string memory name, string memory version) external view returns(PackageIdentity memory) {
-        require(packages[name][version]._entry, "package with given (name, version) does not exist");
-        return packages[name][version];
-    }
+    function getAllIdentities(string memory name) external view returns(PackageIdentity[] memory) {
 
-    // check if the identity exists
-    function checkExists(string memory name, string memory version) external view returns(bool) {
-        return packages[name][version]._entry;
+        uint8 current_counter = version_counts[name];
+        if (current_counter == 0) {
+            return new PackageIdentity[](0);
+        }
+
+        PackageIdentity[] memory identities = new PackageIdentity[](current_counter);
+        for (uint8 i = 0; i < current_counter; i++) {
+            identities[i] = packages[name][i];
+        }
+
+        return identities;
     }
 }

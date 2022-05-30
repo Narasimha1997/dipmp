@@ -19,6 +19,7 @@ app = Flask("__main__")
 # all the package fetch operations will be fetched from
 # the registry
 def get(sub: str):
-    return ""
+    print(sub)
+    return example
 
 app.run('0.0.0.0', port=5000)
