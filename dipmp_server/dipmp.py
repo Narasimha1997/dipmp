@@ -132,9 +132,9 @@ def get_contract_instance(gateway: str, address: str):
 
 
 # get the package details
-def get_package_details(env: Config, package_name: str) -> dict:
+def get_package_details(env: Config, package_name: str, address: str) -> dict:
     try:
-        contract = get_contract_instance(env.eth_gateway, env.eth_contract)
+        contract = get_contract_instance(env.eth_gateway, address)
         fn = contract.get_function_by_name(GETTER)
         return fn(package_name).call()
 
@@ -144,10 +144,10 @@ def get_package_details(env: Config, package_name: str) -> dict:
 
 
 # the main function that will be called from the API
-def resolve_package(env: Config, name: str) -> str:
+def resolve_package(env: Config, name: str, address: str) -> str:
 
     logging.info("resolving package name " + name)
-    packages = get_package_details(env, name)
+    packages = get_package_details(env, name, address)
     anchors = []
 
     # generate HTML 5 doc

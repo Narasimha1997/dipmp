@@ -7,14 +7,15 @@ config = init_env()
 app = Flask("__main__")
 
 
-@app.get("/<sub>/")
+@app.get("/simple/<address>/<sub>/")
 # resolve package names
-def get(sub: str):
+def get(address: str, sub: str):
+    print(address, sub)
     if sub.startswith("/"):
         sub = sub[1:]
     if sub.endswith("/"):
         sub = sub[:-1]
-    return resolve_package(config, sub)
+    return resolve_package(config, sub, address)
 
 
 @app.get("/serve/<hash>/<package>")
