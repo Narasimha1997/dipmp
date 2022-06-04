@@ -3,7 +3,7 @@ import web3 as w
 from web3.middleware import geth_poa_middleware
 import logging
 
-from .env import Config
+from env import Config
 
 logging = logging.getLogger("MainLogger")
 

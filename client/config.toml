@@ -1,10 +1,10 @@
 [chain]
-address="0xb9d99e1235FDA780bef7198cE2bb4321BBe8Fea6"
-private_key="70649ec6ac78c7a58b00ab869fdc767243489cff657cde003002b206d3d307fb"
-gateway="https://rinkeby.infura.io/v3/22b23b601d364f999c0a7cf6deb7bad4"
-account="0xa1652b187d73eE9Bb5E38775413858e63aeea5df"
+address="0x<address of the contract used for storing the index>"
+private_key="<private key of the signer account>"
+gateway="<gateway used for interacting with the ethereum blockchain>"
+account="<address of the signer account>"
 
 [ipfs]
 url="https://api.pinata.cloud/pinning/pinFileToIPFS"
-key="1a500f453a45fe1555e7"
-secret="4fcdb3d83e183f679bcda897be1b923e9529913201d055c3b211cf4eecaf0d1e"
+key="<api key of the pinata gateway>"
+secret="<api secret of the pinata gateway>"

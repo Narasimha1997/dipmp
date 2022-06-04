@@ -1,6 +1,6 @@
 from flask import Flask, stream_with_context, Response
-from .dipmp import resolve_package, yield_chunks_from_ipfs
-from .env import init_env
+from dipmp import resolve_package, yield_chunks_from_ipfs
+from env import init_env
 
 config = init_env()
 
