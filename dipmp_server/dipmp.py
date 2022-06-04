@@ -1,5 +1,4 @@
 import requests
-from distutils.command.config import config
 import web3 as w
 from web3.middleware import geth_poa_middleware
 import logging

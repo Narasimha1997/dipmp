@@ -28,6 +28,7 @@ setup(
         keywords='python web3',
         zip_safe=False,
         install_requires=[
-            "toml==0.10.2"
+            "toml==0.10.2",
+            "requests==2.27.1"
         ]
 )
