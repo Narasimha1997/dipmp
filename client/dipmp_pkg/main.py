@@ -1,8 +1,9 @@
 import argparse
+from distutils.command.config import config
 import toml
 import requests
-import signal
 import os
+from pprint import pprint
 import json
 
 import web3 as w
@@ -104,13 +105,6 @@ ABI = [{
 CHECK_FUNCTION = "checkExists"
 CREATE_FUNCTION = "createIdentity"
 
-def sig_handle():
-    print('Bye! Thanks for using this tool')
-    os._exit(0)
-
-signal.signal(signal.SIGINT, sig_handle)
-
-
 parser = argparse.ArgumentParser(
     description="This is the client tool for dipmp - decentralized, immutable package manager for python."
 )
@@ -146,9 +140,18 @@ def check_exists(contract, name: str, version: int) -> bool:
         exit_with_code(f'failed to check for package {name}, error: {e}', -3)
 
 
-def create_entry(connection: w.Web3, contract, name: str, version: int, i_name: str, hash: str):
+def create_entry(connection: w.Web3, contract, name: str, version: int, i_name: str, hash: str, config: dict):
     try:
-        pass
+        user_address = config['chain']['account']
+        fn = contract.get_function_by_name(CREATE_FUNCTION)
+        tx = fn(name, version, hash, i_name).buildTransaction({"nonce": connection.eth.getTransactionCount(user_address)})
+
+        signed_tx = connection.eth.account.signTransaction(tx, private_key=config['chain']['private_key'])
+        tx_hash = connection.eth.sendRawTransaction(signed_tx.rawTransaction)
+
+        tx_receipt = connection.eth.wait_for_transaction_receipt(tx_hash)
+        pprint(tx_receipt)
+
     except Exception as e:
         exit_with_code(f'failed to create index for package: {name}, ipfs_hash: {hash}, error: {e}', -4)
 
@@ -226,12 +229,10 @@ def main():
     
     # check if exists
     if check_exists(contract, package, version):
-        exit_with_code(f'package with name {} already exists.', package)
+        exit_with_code(f'package with name {package} already exists.', -8)
     
     # push the index:
     ipfs_hash = upload_to_pinata(args.wheel, config)
 
     # push to index
-    
-
-    upload_to_pinata(args.wheel, config)
+    create_entry(connection, contract, package, version, iname, ipfs_hash, config)

@@ -2,6 +2,7 @@
 address="0xb9d99e1235FDA780bef7198cE2bb4321BBe8Fea6"
 private_key="70649ec6ac78c7a58b00ab869fdc767243489cff657cde003002b206d3d307fb"
 gateway="https://rinkeby.infura.io/v3/22b23b601d364f999c0a7cf6deb7bad4"
+account="0xa1652b187d73eE9Bb5E38775413858e63aeea5df"
 
 [ipfs]
 url="https://api.pinata.cloud/pinning/pinFileToIPFS"
